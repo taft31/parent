@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.itcast.mybatis.mapper.UserMapper">
+
+    <!--二级缓存开启声明-->
+    <cache/>
+
+    <select id="queryUserListByIds" resultType="cn.itcast.mybatis.pojo.User">
+        select * from tb_user where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="updateUserIfPropertyNotNull" parameterType="User">
+        UPDATE tb_user
+        <set>
+            <if test="null != userName and '' != userName.trim()">
+                user_name = #{userName},
+            </if>
+            <if test="null != password and '' != password.trim()">
+                password = #{password},
+            </if>
+            <if test="null != name and '' != name.trim()">
+                name = #{name},
+            </if>
+            <if test="null != age ">
+                age = #{age},
+            </if>
+            <if test="null != sex">
+                sex = #{sex},
+            </if>
+            <if test="null != birthday">
+                birthday = #{birthday},
+            </if>
+            updated = now()
+        </set>
+        WHERE
+        (id = #{id})
+    </update>
+
+
+    <select id="queryUserListLikeUserNameAndAge" resultType="cn.itcast.mybatis.pojo.User">
+        select * from tb_user
+        <where>
+            <if test="userName!=null and userName.trim()!=''">
+                user_name like '%' #{userName} '%'
+            </if>
+            <if test="age!=null">
+                and age = #{age}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryUserListByUserNameOrAge" resultType="cn.itcast.mybatis.pojo.User">
+        select * from tb_user
+        <where>
+            <choose>
+                <when test="null!=userName and ''!=userName.trim()">
+                    and user_name like '%' #{userName} '%'
+                </when>
+                <when test="null!= age">
+                    and age = #{age}
+                </when>
+                <otherwise>
+                    and user_name = 'zhangsan'
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+    <select id="queryUserListByUserName" resultType="cn.itcast.mybatis.pojo.User">
+        select * from tb_user where sex=1
+        <if test="null!=userName and ''!=userName.trim()">
+            and user_name like '%' #{userName} '%'
+        </if>
+    </select>
+
+    <select id="loginMap" resultType="cn.itcast.mybatis.pojo.User">
+        select
+        <include refid="CommonSQL.commonSql"/>
+        from tb_user
+        where user_name=#{userName} and password=#{password}
+    </select>
+
+    <resultMap id="userMap" type="User" autoMapping="true">
+        <id column="id" property="id"/>
+        <!--<result column="user_name" property="userName"/>-->
+    </resultMap>
+
+    <select id="login" resultMap="userMap">
+        select * from tb_user where user_name=#{userName} and password=#{password}
+    </select>
+
+    <!--根据表名查询用户-->
+    <select id="queryUserByTableName" resultType="user" parameterType="string">
+        select * from ${tableName}
+    </select>
+
+    <!--根据id查询用户-->
+    <select id="queryUserById" resultType="user" parameterType="long">
+        select * from tb_user where id = #{id}
+    </select>
+
+    <!--查询所有用户-->
+    <select id="queryUserAll" resultType="User">
+        select * from tb_user
+    </select>
+
+
+    <!--新增用户-->
+    <insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO tb_user (
+        user_name,
+        password,
+        name,
+        age,
+        sex,
+        birthday,
+        created,
+        updated
+        )
+        VALUES
+        (
+        #{userName},
+        #{password},
+        #{name},
+        #{age},
+        #{sex},
+        #{birthday},
+        now(),
+        now()
+        )
+    </insert>
+
+    <!--修改用户数据-->
+    <update id="updateUser" parameterType="User">
+        UPDATE tb_user
+        SET
+        user_name = #{userName},
+        password = #{password},
+        name = #{name},
+        age = #{age},
+        sex = #{sex},
+        birthday = #{birthday},
+        updated = now()
+        WHERE
+        (id = #{id})
+    </update>
+
+
+    <!--根据id删除用户-->
+    <delete id="deleteUserById">
+        delete from tb_user where id = #{id}
+    </delete>
+</mapper>
