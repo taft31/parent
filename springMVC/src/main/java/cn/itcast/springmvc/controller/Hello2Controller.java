@@ -3,6 +3,7 @@ package cn.itcast.springmvc.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "hello")
 @Controller
@@ -39,14 +40,22 @@ public class Hello2Controller {
         return modelAndView;
     }
 
-    @RequestMapping(value="/show5/{userId}/{name}")
-    public ModelAndView test05(@PathVariable("userId") String userId, @PathVariable("name") String name){
+    @RequestMapping(value="/show5/{id}/{name}")
+    public ModelAndView test05(@PathVariable("id") Long id, @PathVariable("name") String name){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("hello");
-        modelAndView.addObject("msg","SpringMVC，通配符 - **");
-        System.out.println("userId:"+userId);
+        modelAndView.addObject("msg","SpringMVC，占位符的映射，{placeHolderName}");
+        System.out.println("id:"+id);
         System.out.println("name:"+name);
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/show6",method = RequestMethod.POST)
+    public ModelAndView test06(){
+        ModelAndView mv = new ModelAndView();
+
+        mv.setViewName("hello");
+        return mv;
     }
 
 }
