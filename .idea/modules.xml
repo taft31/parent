@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/mybatis/mybatis.iml" filepath="$PROJECT_DIR$/mybatis/mybatis.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent.iml" filepath="$PROJECT_DIR$/parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/springMVC/springMVC.iml" filepath="$PROJECT_DIR$/springMVC/springMVC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/usermanage/usermanage.iml" filepath="$PROJECT_DIR$/usermanage/usermanage.iml" />
     </modules>
   </component>
 </project>
